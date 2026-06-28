@@ -72,7 +72,7 @@ To run the benchmark and generate the raw JSON timings on your specific CPU arch
 ```bash
   ./simd_bench --benchmark_format=json > results.json
 ```
-To plot the cache boundary graph, go to the build directory and enter in a virutal environment by running the following command (make sure python3 is already installed)
+To plot the cache boundary graph, go to the root directory and enter in a virutal environment by running the following command (make sure python3 is already installed)
 
 ```bash
   source .venv/bin/activate
