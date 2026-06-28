@@ -47,5 +47,5 @@ plt.legend()
 plt.tight_layout()
 
 
-plt.savefig('memory_wall_graph.png', dpi=300)
+plt.savefig('docs/img/memory_wall_graph', dpi=300)
 print("Graph successfully saved as memory_wall_graph.png")
