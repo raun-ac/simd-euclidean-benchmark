@@ -14,7 +14,7 @@ This project calculates the Euclidean distance between two dense vectors using p
 By increasing the array size N from 1,024 to 8,388,608 elements, this benchmark explicitly maps the hardware cache boundaries of an Intel Ice Lake architecture, proving that computational optimization is irrelevant if the CPU is starved for data.
 ## The Memory Wall
 
-                        SIMD Performance vs Memory Bottleneck
+SIMD Performance vs Memory Bottleneck
 
 ![Logo](https://github.com/raun-ac/simd-euclidean-benchmark/blob/Main/docs/img/memory_wall_graph.png?raw=true)
 Generated on Intel Ice Lake using Google Benchmark. Lower arrays fit in fast cache; larger arrays force slow RAM fetches
