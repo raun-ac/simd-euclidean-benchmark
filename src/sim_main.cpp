@@ -1,40 +1,58 @@
-#include <iostream>
-#include <chrono>
+#include <benchmark/benchmark.h>
+#include <cstdlib>
 #include "distance.hpp"
 
+static void CustomArguments(benchmark::Benchmark* b) {
+
+    for (int i = 1024; i <= 8388608; i*=4) {
+        b->Arg(i);
+    }
+}
 
 
+static void BM_ScalarDistance(benchmark::State& state) {
 
-
-int main() {
-
-    const size_t N = 1024 * 1024;
-
-    float* a = (float*)aligned_alloc(64, (N * sizeof(float)));
-    float* b = (float*)aligned_alloc(64, (N * sizeof(float)));
+    size_t N = state.range(0);
+    float* a = (float*)aligned_alloc(64, N*sizeof(float));
+    float* b = (float*)aligned_alloc(64, N*sizeof(float));
 
     for (size_t i = 0; i < N; i++) {
         a[i] = 1.0f;
         b[i] = 2.0f;
     }
 
-    //float trial1 = scaler_distance(a, b, N);
-    //float trial2 = simd_distance(a, b, N);
+    for (auto _ : state) {
 
+        benchmark::DoNotOptimize(scaler_distance(a, b, N));
+    }
 
-    //Measuring Time for Scaler Function
-    auto start = std::chrono::high_resolution_clock::now();
-    float res_s = scaler_distance(a, b, N);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> scaler_ms = end - start;
-
-
-    //Measuring Time for SIMD function
-    start = std::chrono::high_resolution_clock::now();
-    float res_av = simd_distance(a, b, N);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> simd_dist_ms = end - start;
-
-    std::cout << "Scaler Result = " << res_s << " | Time = " << scaler_ms.count() << " ms" << std::endl;
-    std::cout << "SIMD Result = " << res_av << " | Time = " << simd_dist_ms.count() << " ms" << std::endl;
+    free(a);
+    free(b);
 }
+
+BENCHMARK(BM_ScalarDistance)->Apply(CustomArguments);
+
+
+// here we are benchmarking the simd_distance function
+static void BM_SIMDDistance(benchmark::State& state) {
+
+    size_t N = state.range(0);
+    float* a = (float*)aligned_alloc(64, N*sizeof(float));
+    float* b = (float*)aligned_alloc(64, N*sizeof(float));
+
+    for (size_t i = 0; i < N; i++) {
+        a[i] = 1.0f;
+        b[i] = 2.0f;
+    }
+
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(simd_distance(a, b, N));
+    }
+
+    free(a);
+    free(b);
+}
+
+BENCHMARK(BM_SIMDDistance)->Apply(CustomArguments);
+
+BENCHMARK_MAIN();
